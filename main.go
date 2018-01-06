@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-type Result []struct {
+type Result struct {
 	RenderedBody   string      `json:"rendered_body"`
 	Body           string      `json:"body"`
 	Coediting      bool        `json:"coediting"`
@@ -47,11 +47,13 @@ type Result []struct {
 }
 
 func main() {
-	url := "http://qiita.com/api/v2/users/sivertigo/items"
+	var userId string = `sivertigo`
+	url := "http://qiita.com/api/v2/users/" + userId + "/items"
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Fatal(err)
+
 	}
 
 	req.Header.Add("x-auth-token", "token1")
@@ -71,20 +73,18 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println(string(body))
-
 	var results []Result
-	//	if err := json.NewDecoder(res.Body).Decode(&results); err != nil {
-	//		panic(err)
-	//	}
-	err = json.Unmarshal(body, &results)
+
+	err = json.Unmarshal([]byte(body), &results)
 	if err != nil {
 		log.Fatal(err)
+		return
 	}
-
+	var totalLikes int
 	for i := 0; i < len(results); i++ {
-		fmt.Println(results[i])
-		fmt.Println(i)
-
+		fmt.Println(results[i].Title)
+		fmt.Println(results[i].LikesCount)
+		totalLikes += results[i].LikesCount
 	}
+	fmt.Println(totalLikes)
 }
