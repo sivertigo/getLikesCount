@@ -81,6 +81,7 @@ func main() {
 		return
 	}
 	var totalLikes int
+	fmt.Println("ユーザー名" + userId)
 	for i := 0; i < len(results); i++ {
 		fmt.Println(results[i].Title)
 		fmt.Println(results[i].LikesCount)
